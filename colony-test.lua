@@ -34,3 +34,87 @@ ok(true, 'inf and -inf are allowed')
 a['00'] = 1
 a[0] = 2
 ok(a['00'] == 1, 'numbers with leading 0 are parsed fully for numericness')
+
+-- ECMAScript number-string interaction tests
+
+-- expected output is based on node.js 0.10.30 (change ~= to != in tests)
+-- function eq (a, b, why) { console.log((a !== b ? 'not ' : 'ok - ') + why); }
+
+-- eq function will work even if == coerces types
+function eq (a, b, why) ok(type(a)==type(b) and a == b, why) end
+
+eq(5+2, 7,   'number + number = number')
+eq(5-2, 3,   'number - number = number')
+eq(5*2, 10,  'number * number = number')
+eq(5/2, 2.5, 'number / number = number')
+eq(5%2, 1,   'number % number = number')
+
+eq(5+"2", '52', 'number + string = string')
+eq(5-"2", 3,    'number - string = number')
+eq(5*"2", 10,   'number * string = number')
+eq(5/"2", 2.5,  'number / string = number')
+eq(5%"2", 1,    'number % string = number')
+
+eq(-("5"), -5, '- string = number')
+
+eq("5"+2, '52', 'string + number = string')
+eq("5"-2, 3,    'string - number = number')
+eq("5"*2, 10,   'string * number = number')
+eq("5"/2, 2.5,  'string / number = number')
+eq("5"%2, 1,    'string % number = number')
+
+eq(1==2, false, 'number == number when not equal')
+eq(2==2, true,  'number == number when equal')
+eq(1~=2, true,  'number ~= number when not equal')
+eq(2~=2, false, 'number ~= number when equal')
+eq(1<2, true,  'number < number when number less')
+eq(2<2, false, 'number < number when number equal')
+eq(3<2, false, 'number < number when number greater')
+eq(1<=2, true,  'number <= number when number less')
+eq(2<=2, true,  'number <= number when number equal')
+eq(3<=2, false, 'number <= number when number greater')
+eq(1>2, false, 'number > number when number less')
+eq(2>2, false, 'number > number when number equal')
+eq(3>2, true,  'number > number when number greater')
+eq(1>=2, false, 'number >= number when number less')
+eq(2>=2, true,  'number >= number when number equal')
+eq(3>=2, true,  'number >= number when number greater')
+
+eq(1=="2", false, 'number == string when not equal')
+eq(2=="2", true,  'number == string when equal')
+eq(1~="2", true,  'number ~= string when not equal')
+eq(2~="2", false, 'number ~= string when equal')
+eq(1<"2", true,  'number < string when number less')
+eq(2<"2", false, 'number < string when number equal')
+eq(3<"2", false, 'number < string when number greater')
+eq(1<="2", true,  'number <= string when number less')
+eq(2<="2", true,  'number <= string when number equal')
+eq(3<="2", false, 'number <= string when number greater')
+eq(1>"2", false, 'number > string when number less')
+eq(2>"2", false, 'number > string when number equal')
+eq(3>"2", true,  'number > string when number greater')
+eq(1>="2", false, 'number >= string when number less')
+eq(2>="2", true,  'number >= string when number equal')
+eq(3>="2", true,  'number >= string when number greater')
+
+eq("1"==2, false, 'number == string when not equal')
+eq("2"==2, true,  'number == string when equal')
+eq("1"~=2, true,  'number ~= string when not equal')
+eq("2"~=2, false, 'number ~= string when equal')
+eq("1"<2, true,  'number < string when number less')
+eq("2"<2, false, 'number < string when number equal')
+eq("3"<2, false, 'number < string when number greater')
+eq("1"<=2, true,  'number <= string when number less')
+eq("2"<=2, true,  'number <= string when number equal')
+eq("3"<=2, false, 'number <= string when number greater')
+eq("1">2, false, 'number > string when number less')
+eq("2">2, false, 'number > string when number equal')
+eq("3">2, true,  'number > string when number greater')
+eq("1">=2, false, 'number >= string when number less')
+eq("2">=2, true,  'number >= string when number equal')
+eq("3">=2, true,  'number >= string when number greater')
+
+-- ECMAScript === vs == equality
+
+-- colonize.js does this: var infixops = { '!==': '~=', '!=': '~=', '===': '==' };
+-- TODO: implement both kinds of equality in the runtime.
