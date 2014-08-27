@@ -1,7 +1,7 @@
 function tap (n) print('1..' .. tostring(n)); end
 function ok (cond, why) if not cond then io.write('not '); end print('ok - ' .. tostring(why)); end
 
-tap(13)
+tap(13 + 64)
 
 ok(tostring(0/0) == 'NaN', 'nan is NaN not nan')
 ok((not 0) == true, '0 is falsy')
@@ -46,7 +46,7 @@ function eq (a, b, why)
   if isok then
     ok(type(res) == type(b) and res == b, why)
   else
-    print('not ok - '..why..': '..res)
+    ok(false, why..': '..res)
   end
 end
 
@@ -62,6 +62,7 @@ eq(function() return 5*"2" end, 10,   'number * string = number')
 eq(function() return 5/"2" end, 2.5,  'number / string = number')
 eq(function() return 5%"2" end, 1,    'number % string = number')
 
+-- eq(function() return +('5') end, 5,  '+ string = number')
 eq(function() return -("5") end, -5, '- string = number')
 
 eq(function() return "5"+2 end, '52', 'string + number = string')
